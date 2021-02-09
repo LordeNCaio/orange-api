@@ -2,11 +2,14 @@ package com.caiomacedo.orangeapi.service;
 
 import com.caiomacedo.orangeapi.entity.Person;
 import com.caiomacedo.orangeapi.entity.Vaccine;
+import com.caiomacedo.orangeapi.exception.PersonAlreadyExistsException;
+import com.caiomacedo.orangeapi.exception.PersonNotFoundException;
+import com.caiomacedo.orangeapi.exception.VaccineNameInvalidException;
 import com.caiomacedo.orangeapi.repository.PersonRepository;
 import com.caiomacedo.orangeapi.repository.VaccineRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 
 @Service
 public class PersonVaccineService {
@@ -19,41 +22,29 @@ public class PersonVaccineService {
         this.vaccineRepository = vaccineRepository;
     }
 
-    public ResponseEntity findPerson(Integer id) {
-        if(personRepository.findById(id).isPresent()) {
-            var res = personRepository.findById(id).get();
-            return ResponseEntity.status(HttpStatus.FOUND).body(res);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found");
+    public Person findPerson(Integer id) {
+        return personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 
-    public ResponseEntity<Object> addPerson(Person person) {
-        if(person.getName().length() == 0 || person.getEmail().length() == 0 || person.getCpf().length() == 0 || person.getBornAt() == null)
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Person is invalid");
-        if(personRepository.findByEmailAndCpf(person.getEmail(), person.getCpf()).isPresent())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Person already exists");
+    public void addPerson(Person person) {
+        if (personRepository.findByEmail(person.getEmail()).isPresent() || personRepository.findByCpf(person.getCpf()).isPresent()) {
+            throw new PersonAlreadyExistsException();
+        }
         personRepository.save(person);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Person successfully created");
     }
 
-    public ResponseEntity deletePerson(Integer id) {
-        if(personRepository.findById(id).isPresent()) {
-            personRepository.deleteById(id);
-            return ResponseEntity.status(HttpStatus.OK).body("The given person has been deleted");
-        }
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("No Persons found");
+    public void deletePerson(Integer id) {
+        Person person = findPerson(id);
+        personRepository.delete(person);
     }
 
-    public ResponseEntity<Object> addVaccine(Integer person_id, Vaccine vaccine) {
-        if(personRepository.findById(person_id).isPresent()){
-            var person = personRepository.getOne(person_id);
-            if(vaccine.getName().length() != 0 && vaccine.getAppliedAt() != null) {
-                person.addVaccines(vaccine);
-                personRepository.save(person);
-                return ResponseEntity.status(HttpStatus.CREATED).body("Vaccine successfully created");
-            }
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Vaccine is invalid");
+    public void applyVaccine(Integer person_id, Vaccine vaccine) {
+        Person person = findPerson(person_id);
+        if (vaccine.getName().length() == 0) {
+            throw new VaccineNameInvalidException();
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person not found");
+        vaccine.setAppliedAt(LocalDate.now());
+        person.addVaccines(vaccine);
+        personRepository.save(person);
     }
 }

@@ -1,8 +1,7 @@
 package com.caiomacedo.orangeapi.entity;
 
-import org.springframework.lang.NonNull;
-
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -13,24 +12,40 @@ public class Vaccine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(nullable = false)
     private String name;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "applied_at")
-    private Date appliedAt;
+    @Column(name = "applied_at", nullable = false)
+    private LocalDate appliedAt;
 
-    public Vaccine() {}
-    public Vaccine(String name, Date appliedAt) {
-        this.name = name;
-        this.appliedAt = appliedAt;
+    public Vaccine() {
     }
 
-    public Integer getId() { return this.id; }
-    public void setId(Integer id) { this.id = id; }
+    public Vaccine(String name) {
+        this.name = name;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public Integer getId() {
+        return this.id;
+    }
 
-    public Date getAppliedAt() { return appliedAt; }
-    public void setAppliedAt(Date appliedAt) { this.appliedAt = appliedAt; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getAppliedAt() {
+        return appliedAt;
+    }
+
+    public void setAppliedAt(LocalDate appliedAt) {
+        this.appliedAt = appliedAt;
+    }
 }

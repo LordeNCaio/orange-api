@@ -2,6 +2,7 @@ package com.caiomacedo.orangeapi.controller;
 
 import com.caiomacedo.orangeapi.entity.Person;
 import com.caiomacedo.orangeapi.service.PersonVaccineService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,18 +15,21 @@ public class PersonController {
     }
 
     @GetMapping("/person/{id}")
-    ResponseEntity findPerson(@PathVariable Integer id) {
+    @ResponseStatus(HttpStatus.FOUND)
+    Person findPerson(@PathVariable Integer id) {
         return personVaccineService.findPerson(id);
     }
 
     @PostMapping("/person")
-    ResponseEntity<Object> addPerson(@RequestBody Person person) {
-        return personVaccineService.addPerson(person);
+    @ResponseStatus(HttpStatus.CREATED)
+    void addPerson(@RequestBody Person person) {
+        personVaccineService.addPerson(person);
     }
 
-    @DeleteMapping("/person/del/{id}")
-    ResponseEntity deletePerson(@PathVariable Integer id) {
-        return personVaccineService.deletePerson(id);
+    @DeleteMapping("/person/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deletePerson(@PathVariable Integer id) {
+        personVaccineService.deletePerson(id);
     }
 
 }
