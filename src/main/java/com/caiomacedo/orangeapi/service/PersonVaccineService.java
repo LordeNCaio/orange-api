@@ -4,12 +4,13 @@ import com.caiomacedo.orangeapi.entity.Person;
 import com.caiomacedo.orangeapi.entity.Vaccine;
 import com.caiomacedo.orangeapi.exception.PersonAlreadyExistsException;
 import com.caiomacedo.orangeapi.exception.PersonNotFoundException;
-import com.caiomacedo.orangeapi.exception.VaccineNameInvalidException;
+import com.caiomacedo.orangeapi.exception.VaccineNotFoundException;
 import com.caiomacedo.orangeapi.repository.PersonRepository;
 import com.caiomacedo.orangeapi.repository.VaccineRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class PersonVaccineService {
@@ -38,13 +39,15 @@ public class PersonVaccineService {
         personRepository.delete(person);
     }
 
+    public List<Vaccine> findVaccineByName(String name) {
+        return vaccineRepository.findAllByName(name);
+    }
+
     public void applyVaccine(Integer person_id, Vaccine vaccine) {
-        Person person = findPerson(person_id);
-        if (vaccine.getName().length() == 0) {
-            throw new VaccineNameInvalidException();
-        }
+        Person p = findPerson(person_id);
+        vaccine.setPerson(p);
         vaccine.setAppliedAt(LocalDate.now());
-        person.addVaccines(vaccine);
-        personRepository.save(person);
+        p.addVaccines(vaccine);
+        personRepository.save(p);
     }
 }

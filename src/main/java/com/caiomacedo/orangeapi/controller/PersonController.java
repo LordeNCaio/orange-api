@@ -4,12 +4,18 @@ import com.caiomacedo.orangeapi.entity.Person;
 import com.caiomacedo.orangeapi.service.PersonVaccineService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
+@Validated
 public class PersonController {
 
     private final PersonVaccineService personVaccineService;
+
     PersonController(PersonVaccineService personVaccineService) {
         this.personVaccineService = personVaccineService;
     }
@@ -22,7 +28,7 @@ public class PersonController {
 
     @PostMapping("/person")
     @ResponseStatus(HttpStatus.CREATED)
-    void addPerson(@RequestBody Person person) {
+    void addPerson(@Valid @RequestBody Person person) {
         personVaccineService.addPerson(person);
     }
 

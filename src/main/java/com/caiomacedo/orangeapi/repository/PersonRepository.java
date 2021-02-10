@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface PersonRepository extends JpaRepository<Person, Integer> {
 
-    Optional<Person> findByEmailAndCpf(String email, String cpf);
     Optional<Person> findByEmail(String email);
     Optional<Person> findByCpf(String cpf);
+
 }

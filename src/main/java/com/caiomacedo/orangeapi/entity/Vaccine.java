@@ -1,6 +1,13 @@
 package com.caiomacedo.orangeapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.aspectj.weaver.patterns.PerObject;
+
 import javax.persistence.*;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -12,11 +19,16 @@ public class Vaccine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Vaccine name cannot be empty or null")
     private String name;
 
-    @Column(name = "applied_at", nullable = false)
+    @Column(name = "applied_at", updatable = false)
     private LocalDate appliedAt;
+
+    @JsonIgnoreProperties("vaccines")
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 
     public Vaccine() {
     }
@@ -47,5 +59,13 @@ public class Vaccine {
 
     public void setAppliedAt(LocalDate appliedAt) {
         this.appliedAt = appliedAt;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 }

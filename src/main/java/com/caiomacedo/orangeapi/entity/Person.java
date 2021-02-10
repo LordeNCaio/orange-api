@@ -1,6 +1,10 @@
 package com.caiomacedo.orangeapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,17 +16,25 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Name cannot be empty or null")
     private String name;
 
+    @NotBlank(message = "Email cannot be empty or null")
+    @Email(message = "Email must be email@email.com")
     @Column(unique = true)
     private String email;
 
+    @NotBlank(message = "CPF cannot be empty or null")
+    @Pattern(regexp = "(([0-9]{3}[.]){2}[0-9]{3}[-][0-9]{2})", message = "CPF must be 000.000.000.-00")
     @Column(unique = true)
     private String cpf;
 
+    @NotNull(message = "Born date cannot be empty or null")
+    @Past(message = "Born date must be in past")
     @Column(name = "born_at")
     private LocalDate bornAt;
 
+    @JsonIgnoreProperties("person")
     @OneToMany(targetEntity = Vaccine.class, cascade = CascadeType.ALL)
     private List<Vaccine> vaccines;
 
