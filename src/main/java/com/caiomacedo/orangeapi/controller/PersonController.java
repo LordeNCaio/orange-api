@@ -3,8 +3,6 @@ package com.caiomacedo.orangeapi.controller;
 import com.caiomacedo.orangeapi.entity.Person;
 import com.caiomacedo.orangeapi.service.PersonVaccineService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
