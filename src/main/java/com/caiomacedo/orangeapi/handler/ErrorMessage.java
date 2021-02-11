@@ -3,6 +3,7 @@ package com.caiomacedo.orangeapi.handler;
 import java.time.LocalDateTime;
 
 public class ErrorMessage {
+
     private final LocalDateTime timestamp;
     private final String message;
 
@@ -14,7 +15,6 @@ public class ErrorMessage {
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
-
     public String getMessage() {
         return message;
     }

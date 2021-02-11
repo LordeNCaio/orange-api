@@ -3,14 +3,12 @@ package com.caiomacedo.orangeapi.controller;
 import com.caiomacedo.orangeapi.entity.Vaccine;
 import com.caiomacedo.orangeapi.service.PersonVaccineService;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@Validated
 public class VaccineController {
 
     private final PersonVaccineService personVaccineService;

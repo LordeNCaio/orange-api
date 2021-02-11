@@ -4,7 +4,6 @@ import com.caiomacedo.orangeapi.entity.Person;
 import com.caiomacedo.orangeapi.entity.Vaccine;
 import com.caiomacedo.orangeapi.exception.PersonAlreadyExistsException;
 import com.caiomacedo.orangeapi.exception.PersonNotFoundException;
-import com.caiomacedo.orangeapi.exception.VaccineNotFoundException;
 import com.caiomacedo.orangeapi.repository.PersonRepository;
 import com.caiomacedo.orangeapi.repository.VaccineRepository;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,14 @@ public class PersonVaccineService {
         return personRepository.findById(id).orElseThrow(PersonNotFoundException::new);
     }
 
+    public Person findPersonEmail(String email) {
+        return personRepository.findByEmail(email).orElseThrow(PersonNotFoundException::new);
+    }
+
+    public Person findPersonCpf(String cpf) {
+        return personRepository.findByCpf(cpf).orElseThrow(PersonNotFoundException::new);
+    }
+
     public void addPerson(Person person) {
         if (personRepository.findByEmail(person.getEmail()).isPresent() || personRepository.findByCpf(person.getCpf()).isPresent()) {
             throw new PersonAlreadyExistsException();
@@ -41,6 +48,16 @@ public class PersonVaccineService {
 
     public List<Vaccine> findVaccineByName(String name) {
         return vaccineRepository.findAllByName(name);
+    }
+
+    public List<Vaccine> findVaccineByPersonEmail(String email) {
+        var p = findPersonEmail(email);
+        return p.getVaccines();
+    }
+
+    public List<Vaccine> findVaccineByPersonCpf(String cpf) {
+        var p = findPersonCpf(cpf);
+        return p.getVaccines();
     }
 
     public void applyVaccine(Integer person_id, Vaccine vaccine) {
