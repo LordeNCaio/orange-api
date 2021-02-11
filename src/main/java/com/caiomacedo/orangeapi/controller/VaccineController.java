@@ -28,4 +28,13 @@ public class VaccineController {
         return personVaccineService.findVaccineByName(name);
     }
 
+    @GetMapping("vaccine/mail/{email}")
+    List<Vaccine> findVaccineByPersonEmail(@PathVariable String email) {
+        return personVaccineService.findVaccineByPersonEmail(email);
+    }
+
+    @GetMapping("vaccine/cpf/{cpf}")
+    List<Vaccine> findVaccineByPersonCpf(@PathVariable String cpf) {
+        return personVaccineService.findVaccineByPersonCpf(cpf);
+    }
 }
